@@ -93,50 +93,41 @@ Purchase.belongsTo(Product, { foreignKey: 'ProductId' });
 
 
 
+// Start server immediately
+app.listen(process.env.PORT, () => {
+    console.log(`Server running on http://localhost:${process.env.PORT}`);
+});
+
+// Initialize database in background
 createDatabaseIfNotExists(process.env.CONNECTION_URL != undefined).then(() => {
-    db.sequelize.sync(
+    return db.sequelize.sync(
         { force: process.env.PERSISTENCE == '0' }
-    ).then(() => {
+    );
+}).then(() => {
+    console.log('Database synced successfully');
 
-        if(process.env.PERSISTENCE == '0') {
-            // Product.hasMany(ProductImgs, { constraints: false});
-            // Product.hasMany(Purchase, {constraints: false});
+    if(process.env.PERSISTENCE == '0') {
+        Product.hasMany(ProductImgs, { foreignKey: 'ProductId', constraints: false});
+        ProductImgs.belongsTo(Product, { foreignKey: 'ProductId', constraints: false});
 
-            Product.hasMany(ProductImgs, { foreignKey: 'ProductId', constraints: false});
-            ProductImgs.belongsTo(Product, { foreignKey: 'ProductId', constraints: false});
+        Product.hasMany(Purchase, { foreignKey: 'ProductId' , constraints: false});
+        Purchase.belongsTo(Product, { foreignKey: 'ProductId' , constraints: false });
 
-            Product.hasMany(Purchase, { foreignKey: 'ProductId' , constraints: false});
-            Purchase.belongsTo(Product, { foreignKey: 'ProductId' , constraints: false });
+        return insertSampleData().then(() => {
+            console.log('Sample data inserted');
 
-            insertSampleData().then(() => {
-                console.log('Sample data inserted');
-
-            }).catch((error) => {
-                console.error('Error inserting sample data:', error);
-            });
-            // Product.hasMany(ProductImgs, { constraints: true});
-            // Product.hasMany(Purchase, {constraints: true});
             Product.hasMany(ProductImgs, { foreignKey: 'ProductId', constraints: true});
             ProductImgs.belongsTo(Product, { foreignKey: 'ProductId', constraints: true});
 
             Product.hasMany(Purchase, { foreignKey: 'ProductId' , constraints: true});
             Purchase.belongsTo(Product, { foreignKey: 'ProductId' , constraints: true });
-        }
-
-        //sync session store with db
-        sessionStore.sync().then(() => {
-            app.listen(process.env.PORT, () => {
-                console.log(`Server running on http://localhost:${process.env.PORT}`);
-            });
-        }).catch((error) => {
-            console.error('Error synchronizing session store:', error);
         });
-
-    }).catch((error) => {
-        console.error('Error syncing database:', error);
-        throw error;
-    });
+    }
+}).then(() => {
+    //sync session store with db
+    return sessionStore.sync();
+}).then(() => {
+    console.log('Session store synced successfully');
 }).catch((error) => {
-    console.error('Error creating database:', error);
-    // throw error;     // Commented out to prevent the app from crashing when the PostgreSQL is using
+    console.error('Error initializing database:', error);
 });
