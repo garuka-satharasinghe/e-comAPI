@@ -65,7 +65,7 @@ app.get('/helloworld', (req, res) => {
 });
 
 const routes = require('./routes/index');
-app.use('/api/v1', routes);
+app.use('/', routes);
 
 const { User, Seller, Session, SellerSocialMediaLinks, Product, ProductImgs, Purchase } = db;
 

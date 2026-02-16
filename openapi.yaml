@@ -15,7 +15,7 @@ paths:
         '200':
           description: Success
 
-  /api/v1/auth/login:
+  /auth/login:
     post:
       summary: User login
       requestBody:
@@ -33,7 +33,7 @@ paths:
         '200':
           description: Login successful
 
-  /api/v1/auth/register:
+  /auth/register:
     post:
       summary: User registration
       requestBody:
@@ -53,14 +53,14 @@ paths:
         '201':
           description: User created
 
-  /api/v1/auth/logout:
+  /auth/logout:
     post:
       summary: User logout
       responses:
         '200':
           description: Logout successful
 
-  /api/v1/product:
+  /product:
     get:
       summary: Get all products
       responses:
@@ -78,7 +78,7 @@ paths:
         '201':
           description: Product created
 
-  /api/v1/product/{id}:
+  /product/{id}:
     get:
       summary: Get product by ID
       parameters:
@@ -119,7 +119,7 @@ paths:
         '204':
           description: Product deleted
 
-  /api/v1/purchase:
+  /purchase:
     get:
       summary: Get purchases
       responses:
@@ -137,14 +137,14 @@ paths:
         '201':
           description: Purchase created
 
-  /api/v1/order:
+  /order:
     get:
       summary: Get orders
       responses:
         '200':
           description: List of orders
 
-  /api/v1/order/{id}:
+  /order/{id}:
     get:
       summary: Get order by ID
       parameters:
