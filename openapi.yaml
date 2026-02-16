@@ -15,7 +15,21 @@ paths:
         '200':
           description: Success
 
-  /auth/login:
+  /api/v1/lol:
+    get:
+      summary: Test endpoint
+      responses:
+        '200':
+          description: Returns lol
+
+  /api/v1/protected:
+    get:
+      summary: Protected endpoint
+      responses:
+        '200':
+          description: Protected resource
+
+  /api/v1/auth/login:
     post:
       summary: User login
       requestBody:
@@ -25,7 +39,7 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                email:
                   type: string
                 password:
                   type: string
@@ -33,7 +47,7 @@ paths:
         '200':
           description: Login successful
 
-  /auth/register:
+  /api/v1/auth/userReg:
     post:
       summary: User registration
       requestBody:
@@ -42,32 +56,13 @@ paths:
           application/json:
             schema:
               type: object
-              properties:
-                username:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
       responses:
         '201':
           description: User created
 
-  /auth/logout:
+  /api/v1/auth/sellerReg:
     post:
-      summary: User logout
-      responses:
-        '200':
-          description: Logout successful
-
-  /product:
-    get:
-      summary: Get all products
-      responses:
-        '200':
-          description: List of products
-    post:
-      summary: Create product
+      summary: Seller registration
       requestBody:
         required: true
         content:
@@ -76,28 +71,58 @@ paths:
               type: object
       responses:
         '201':
-          description: Product created
+          description: Seller created
 
-  /product/{id}:
+  /api/v1/auth/logout:
+    post:
+      summary: User logout
+      responses:
+        '200':
+          description: Logout successful
+
+  /api/v1/auth/test:
     get:
-      summary: Get product by ID
+      summary: Test auth
+      responses:
+        '200':
+          description: Test successful
+
+  /api/v1/product/getProducts:
+    get:
+      summary: Get all products
+      responses:
+        '200':
+          description: List of products
+
+  /api/v1/product/getProductDetails:
+    get:
+      summary: Get product details
       parameters:
-        - name: id
-          in: path
+        - name: pid
+          in: query
           required: true
           schema:
             type: integer
       responses:
         '200':
           description: Product details
-    put:
+
+  /api/v1/product/add:
+    post:
+      summary: Add product
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Product created
+
+  /api/v1/product/update:
+    post:
       summary: Update product
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
       requestBody:
         required: true
         content:
@@ -107,19 +132,21 @@ paths:
       responses:
         '200':
           description: Product updated
-    delete:
+
+  /api/v1/product/delete:
+    post:
       summary: Delete product
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
       responses:
         '204':
           description: Product deleted
 
-  /purchase:
+  /api/v1/purchase:
     get:
       summary: Get purchases
       responses:
@@ -137,14 +164,14 @@ paths:
         '201':
           description: Purchase created
 
-  /order:
+  /api/v1/order:
     get:
       summary: Get orders
       responses:
         '200':
           description: List of orders
 
-  /order/{id}:
+  /api/v1/order/{id}:
     get:
       summary: Get order by ID
       parameters:
