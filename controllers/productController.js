@@ -44,7 +44,7 @@ async function addProduct(req, res) {
         // console.log("productid",product.dataValues.ProductId);
 
         if (req.files && req.files.length > 0) {
-            const imgs = req.files.map(file => ({ imgUrl: file.filename }));
+            const imgs = req.files.map(file => ({ imgUrl: file.path }));
 
             await ProductImgs.bulkCreate(imgs.map(img => ({ ...img, ProductId: product.dataValues.ProductId })));
             console.log('Images added successfully');
